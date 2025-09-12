@@ -63,7 +63,7 @@ def backtrackingDescent(g,masses,lam,beta,L,maxIter,N,eta,lamMethod):
 
 #X_data: the data
 #massInit: initial probability masses for each location
-#density: Either a Scaled_Image or Convex_Polyhedra object. See class make_square, make_image_CPA, and make_image_SI for ways to initalize a density
+#twoDimDensity: (If d=1, set to None). If d=2, Either a Scaled_Image or Convex_Polyhedra object. See class make_square, make_image_CPA, and make_image_SI for ways to initalize a density
 #eta: This is the initial learning rate used for a step of descent, and a step of ascent.
 #lam: The value of lambda (not relevant when lamMethod = no_KL)
 #verbose: set to true for debugging
@@ -77,13 +77,18 @@ def backtrackingDescent(g,masses,lam,beta,L,maxIter,N,eta,lamMethod):
         #Important note: no_KL not working now.
 #illConditionThresh: Compare ratio of maximum over minimum singular values of Hessian to determine closeness to non-invertability. Backstepping of ascent will
     #ensure that this ratio is sufficiently low before choosing a new value for g.
-def run_mass_update(X_data,massInit,density,eta,lam = 1,verbose = False,gMethod = "secondOrder", numGstepsPerIter = 1,maxiter = 10000,tol = 1e-10, lamMethod = "absolute",illConditionThresh = 10e5):
-
+#distr, oneDimBounds, optional_arguments: These are your arguments for 1 dimensional density initlaization.
+def run_mass_update(X_data,massInit,twoDimDensity,eta,lam = 1,verbose = False,gMethod = "secondOrder", numGstepsPerIter = 1,maxiter = 10000,tol = 1e-10, lamMethod = "absolute",illConditionThresh = 10e5,dimension=2,distr=None,oneDimBounds=None,optional_arguments=None):
+    masses = massInit
+    if dimension == 1:
+            #optimal_transport expects that Y will be in sorted order when d=1
+            sortedOrder = np.argsort(X_data)
+            X_data = X_data[sortedOrder]
+            masses = massInit[sortedOrder]
     #Smallest number in python
     L = np.finfo(np.float64).tiny
 
     N = len(X_data)
-    masses = massInit
     beta = 3/4 #backtracking multiplier for the descent and ascent backtracking.
     maxIterBacktracking = 5000 #max number of backtracks
 
@@ -92,9 +97,8 @@ def run_mass_update(X_data,massInit,density,eta,lam = 1,verbose = False,gMethod 
     #An initial potential vector
     negativePotential = np.zeros(N)
 
-
     for i in range(maxiter):
-        negativePotential = optimal_transport_V2.optimal_transport(density,X_data,masses,negativePotential,maxiter = numGstepsPerIter,learningRate = eta,illConditionThresh = illConditionThresh,method=gMethod,verbose=False,beta=beta)
+        negativePotential = optimal_transport_V2.optimal_transport(twoDimDensity,X_data,masses,negativePotential,maxiter = numGstepsPerIter,learningRate = eta,illConditionThresh = illConditionThresh,method=gMethod,verbose=False,beta=beta,distr=distr,dimension=dimension,oneDimBounds = oneDimBounds,optional_arguments=optional_arguments)
         if negativePotential[0] == "NA":
             return "NA","NA","NA","NA","NA"
         g = -negativePotential
@@ -106,12 +110,18 @@ def run_mass_update(X_data,massInit,density,eta,lam = 1,verbose = False,gMethod 
             print("The g is ")
             print(g)
             print("the integrals from the g are ")
-            pd = optimal_transport_V2.PowerDiagram(X_data,g,density)
-            print(pd.integrals())
-            print("The approximate Wasserstein-2 Squared is ")
-            print(np.sum(pd.second_order_moments()))
-
-        masses1 = backtrackingDescent(g,masses,lam,beta,L,maxIterBacktracking,N,eta,lamMethod)
+            if dimension == 2:
+                pd = optimal_transport_V2.PowerDiagram(X_data,g,twoDimDensity)
+                print(pd.integrals())
+                print("The approximate Wasserstein-2 Squared is ")
+                print(np.sum(pd.second_order_moments()))
+            elif dimension == 1:
+                integs = optimal_transport_V2.laguerre_areas(None,X_data,negativePotential,der=False,dimension=dimension,distr=distr,oneDimBounds=oneDimBounds,optional_arguments=optional_arguments)
+                print(integs)
+        if dimension == 1:
+            masses1 = backtrackingDescent(negativePotential,masses,lam,beta,L,maxIterBacktracking,N,eta,lamMethod)
+        elif dimension == 2:
+            masses1 = backtrackingDescent(-negativePotential,masses,lam,beta,L,maxIterBacktracking,N,eta,lamMethod)
 
 
         err = np.sum((masses1 - masses) ** 2)
@@ -120,6 +130,15 @@ def run_mass_update(X_data,massInit,density,eta,lam = 1,verbose = False,gMethod 
             break
 
         masses = masses1
+    #Non algorithmic display consideration: Recall for d=1, ot expects the data in sorted order. To make d=1 plots 
+    #we report back the masses associated with the data in by-index order so that the plots are comparable to the 2d plots.
+    if dimension == 1:
+        massesForDisplay= np.empty_like(masses)
+        massesForDisplay[sortedOrder] = masses
+        gForDisplay = np.empty_like(g)
+        gForDisplay[sortedOrder] = g
+        masses = massesForDisplay
+        g = gForDisplay
     return masses, g, err, i+1, errors
 
 
@@ -129,7 +148,7 @@ def run_mass_update(X_data,massInit,density,eta,lam = 1,verbose = False,gMethod 
 #density: This is a convexPolyhedra or ScaledImage. It is the density.
 #The rest of the parameters are mass_update paramters for repeated runs. Each repeated run has identical settings.
 #traceCanvas: An Axes Subplot object. This will plot the traces of the final weights in increasing order
-def mass_update_repeated_runner(X_data,numWeightInits,concentrationInit,density,lamMethod,eta,lam,numGstepsPerIter = 1,maxiter = 2000,tol = 1e-7,verbose=False,traceCanvas=None,upperLimOnTracePlot=None):
+def mass_update_repeated_runner(X_data,numWeightInits,concentrationInit,twoDimDensity,lamMethod,eta,lam,numGstepsPerIter = 1,maxiter = 2000,tol = 1e-7,verbose=False,traceCanvas=None,upperLimOnTracePlot=None,dimension=2,distr=None,oneDimBounds = None,optional_arguments=None,illConditionThresh=10e5):
     n = len(X_data)
     bestWeights = np.zeros(n)
     bestObjective = np.inf
@@ -138,27 +157,34 @@ def mass_update_repeated_runner(X_data,numWeightInits,concentrationInit,density,
     klCosts = np.zeros(numWeightInits)
     for j in np.arange(numWeightInits):
             massInit = np.random.dirichlet(concentrationInit)
-            masses, g, err, numIter, errors = run_mass_update(X_data,massInit,density,eta,lam=lam,verbose=False,gMethod = "secondOrder",numGstepsPerIter = numGstepsPerIter,maxiter = maxiter,tol=tol,lamMethod = lamMethod)
+            #print("The ill condition threshold is "+str(illConditionThresh))
+            masses, g, err, numIter, errors = run_mass_update(X_data,massInit,twoDimDensity,eta,lam=lam,verbose=False,gMethod = "secondOrder",numGstepsPerIter = numGstepsPerIter,maxiter = maxiter,tol=tol,lamMethod = lamMethod,dimension=dimension,distr=distr,oneDimBounds = oneDimBounds,optional_arguments=optional_arguments,
+                                                              illConditionThresh = illConditionThresh)
             if verbose:
                 print("The number of iterations is "+str(numIter))
-            wasserCost = optimal_transport_V2.computeW2_squared(X_data,masses,density)
-            KLcost = np.sum(masses*np.log(masses))
-            if lamMethod == "no_KL":
-                objVal = wasserCost
-            elif lamMethod == "absolute":
-                objVal = np.sum(masses*np.log(masses))+lam*wasserCost
-            objVals[j] = objVal
-            wassers[j] = wasserCost
-            klCosts[j] = KLcost
-            if objVal < bestObjective:
-                bestWeights = masses
-                bestObjective = objVal
-            if traceCanvas:
-                if objVal < np.inf:
-                    traceCanvas.plot(np.sort(masses),alpha=0.3)
-                    traceCanvas.set_ylim((0,upperLimOnTracePlot))
-                    traceCanvas.set_title("Lambda = "+str(lam)+": weights in increasing order \n (all successful runs plotted)")
-    
+            if numIter == "NA":
+                objVals[j] = np.inf
+                wassers[j] = np.inf
+                klCosts[j] = np.inf
+            else:
+                wasserCost = optimal_transport_V2.computeW2_squared(X_data,masses,twoDimDensity,dimension=dimension,distr=distr,oneDimBounds=oneDimBounds,optional_arguments=optional_arguments,illConditionThresh=illConditionThresh)
+                KLcost = np.sum(masses*np.log(masses))
+                if lamMethod == "no_KL":
+                    objVal = wasserCost
+                elif lamMethod == "absolute":
+                    objVal = np.sum(masses*np.log(masses))+lam*wasserCost
+                objVals[j] = objVal
+                wassers[j] = wasserCost
+                klCosts[j] = KLcost
+                if objVal < bestObjective:
+                    bestWeights = masses
+                    bestObjective = objVal
+                if traceCanvas:
+                    if objVal < np.inf:
+                        #print(objVal)
+                        traceCanvas.plot(np.sort(masses),alpha=0.3)
+                        traceCanvas.set_ylim((0,upperLimOnTracePlot))
+                        traceCanvas.set_title("Lambda = "+str(lam)+": weights in increasing order \n (all successful runs plotted)")
     return bestWeights,objVals,wassers,klCosts
 
 
@@ -169,7 +195,7 @@ def mass_update_repeated_runner(X_data,numWeightInits,concentrationInit,density,
 #densityString: This is a string that provides a title description of the density
 #dataString: This is a string that provides a title description of the data generation process.
 #concForNoKL: unused parameter. ignore.
-def max_lambda_finder(X_data,numWeightInits,concentrationInit,density,lambdas,concForNoKL =1,visualize = True,densityString = "NA",dataString = "NA"):
+def max_lambda_finder(X_data,numWeightInits,concentrationInit,twoDimDensity,lambdas,concForNoKL =1,visualize = True,densityString = "NA",dataString = "NA",dimension=2,distr=None,oneDimBounds = None,optional_arguments=None):
     #Set a learning rate
     eta = .5
 
@@ -186,8 +212,8 @@ def max_lambda_finder(X_data,numWeightInits,concentrationInit,density,lambdas,co
         #print(numWeightInits)
         #print(concentrationInit)
         #print(density)
-        bestMasses,objVals,wasList,klCosts = mass_update_repeated_runner(X_data,numWeightInits,concentrationInit,density,"absolute",eta,lam)
-        wasserAtBest = optimal_transport_V2.computeW2_squared(X_data,bestMasses,density)
+        bestMasses,objVals,wasList,klCosts = mass_update_repeated_runner(X_data,numWeightInits,concentrationInit,twoDimDensity,"absolute",eta,lam,dimension=dimension,distr=None,oneDimBounds = None,optional_arguments=None)
+        wasserAtBest = optimal_transport_V2.computeW2_squared(X_data,bestMasses,twoDimDensity,dimension=dimension,distr=distr,oneDimBounds=oneDimBounds,optional_arguments=optional_arguments)
         wassers[j] = wasserAtBest
         objectiveValues.append(objVals)
         wasserValues.append(wasList)

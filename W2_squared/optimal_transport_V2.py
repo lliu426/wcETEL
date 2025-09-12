@@ -5,12 +5,15 @@ from pysdot import PowerDiagram
 from scipy.sparse import csr_matrix
 from scipy.sparse import diags
 from scipy.sparse.linalg import spsolve
+from scipy.sparse.linalg import eigsh
 from numpy.linalg import cond
 from scipy.stats import beta
 from scipy.stats import norm
 from functools import partial
 import matplotlib.pyplot as plt
+from scipy.integrate import quad
 from IPython.display import display
+import time
 
 #This overrides a function in pysdot.PowerDiagram in order to display a powerDiagram class object with a title
 def new_display_jupyter(self, disp_centroids=True, disp_positions=True, disp_ids=True, disp_arrows=False, hide_after=-1,title = "",saveDir = ""):
@@ -315,9 +318,48 @@ def make_product_beta_density(alpha1,beta1,alpha2,beta2,frequency,display=False)
     img = ((frequency-1)**2)*img
     return make_image_SI(img,display=display)
 
+#Given domain = [lower,upper], the one dimensional data, and a potential vector, return the partitions that make up the Laguerre Diagram.
+#returns empty_partitions, if this is the case
+def oneDimPartitionFinder(psi,Y,domain):
+
+    N = len(Y)
+    pd = np.zeros(N+1)
+    pd[0] = domain[0]
+    for i in np.arange(N-1):
+        yLow = Y[i]
+        yHigh = Y[i+1]
+        gLow = psi[i]
+        gHigh = psi[i+1]
+        threshold = (gLow-gHigh+yHigh**2-yLow**2)/(2*(yHigh-yLow))
+        pd[i+1] = threshold
+        if (pd[i+1] < pd[i]) or (pd[i+1] > domain[1]) or (pd[i+1] < domain[0]):
+            return ["empty_partitions"]
+    pd[-1] = domain[1]
+    return pd
+    
+#pd: the partition of R
+#Y: the data
+def oneDimDisplayPowerDiagram(pd,Y):
+    plt.figure(figsize=(8, 2))
+    plt.plot(pd, np.zeros_like(pd), '|', color='black', markersize=18, label='Power Diagram Partition')
+    plt.plot(Y, np.zeros_like(Y), 'x', color='blue', markersize=8, label='data')
+    plt.yticks([])
+    plt.legend()
+    #plt.grid(True, axis='x', linestyle='--', alpha=0.5)
+    plt.tight_layout()
+    plt.show()
+
+
+def oneDimSecondMomentIntegration(x,datum,distr,optional_arguments):
+    z = (x-datum)**2
+    if distr == "normal":
+        return z*(norm.pdf(x,loc=optional_arguments[0],scale=np.sqrt(optional_arguments[1])))
+    elif distr == "beta":
+        return z*(beta.pdf(x,a=optional_arguments[0],b=optional_arguments[1]))
+
 # computes the areas of the Laguerre cells intersected with the domain, and returns it as an array
 # if der = True, also returns a sparse matrix representing the Hessian of the kantorovich potential function H(psi) = int psi^c + inner(g,w)
-#domain : the density (a convexPolyhedra or ScaledImage)
+#twoDimDensity : the density (a convexPolyhedra or ScaledImage). Set to None if d=1
 #Y: the data. (should be in sorted order already if d=1)
 #psi: initial starting position
 #distr: relevant for d=1 case. Will fill in very soon
@@ -327,12 +369,13 @@ def make_product_beta_density(alpha1,beta1,alpha2,beta2,frequency,display=False)
 #if d=1, distr is one of:
     #normal_1d
     #beta_1d
+#if d=1, oneDimBounds = [smallest Domain value, largest Domain value]
 #optional_arguments: 
     #If optional_argument == normal_1d, then specify (mean,variance)
     #If optional_arguments == beta_1d, then specify (alpha,beta)
-def laguerre_areas(domain, Y, psi, der=False,dimension=2,distr = None, optional_arguments = None):
+def laguerre_areas(twoDimDensity, Y, psi, der=False,dimension=2,distr = None, oneDimBounds=None,optional_arguments = None):
     if dimension == 2:
-        pd = PowerDiagram(Y, -psi, domain)
+        pd = PowerDiagram(Y, -psi, twoDimDensity)
         if der:
             N = len(psi)
             mvs = pd.der_integrals_wrt_weights()
@@ -341,17 +384,18 @@ def laguerre_areas(domain, Y, psi, der=False,dimension=2,distr = None, optional_
             return pd.integrals()
     if dimension == 1:
         #collect the split points. This is construction of the 1-dimensional power diagram
-        N = len(Y)
-        pd = np.zeros(N+1)
-        pd[0] = domain[0]
-        for i in np.arange(N-1):
-            yLow = Y[i]
-            yHigh = Y[i+1]
-            gLow = psi[i]
-            gHigh = psi[i+1]
-            threshold = (gLow-gHigh+yHigh**2-yLow**2)/(2*(yHigh-yLow))
-            pd[i+1] = threshold
-        pd[-1] = domain[1]
+        #print("The potential is ")
+        #print(psi)
+        #print("The data is  ")
+        #print(Y)
+        pd = oneDimPartitionFinder(psi,Y,oneDimBounds)
+        if pd[0] == "empty_partitions":
+            if der:
+                return np.nan*np.ones(2),np.nan*np.ones(shape=(2,2))
+            else:
+                return np.nan*np.ones(2)
+        #print("The power diagram is ")
+        #print(pd)
 
         #Now we perform the integral computation and computation of matrix of partial derivs
         if distr == "normal":
@@ -365,18 +409,20 @@ def laguerre_areas(domain, Y, psi, der=False,dimension=2,distr = None, optional_
             sourceCDF = partial(beta.cdf,a=alph,b=bet)
             sourcePDF = partial(beta.pdf,a=alph,b=bet)
         
+        #time1 = time.time()
         #integral computation
         cdfVals = sourceCDF(pd)
         integs = [cdfVals[i]-cdfVals[i-1] for i in np.arange(1,len(cdfVals))]
+        if not(der):
+            return np.array(integs)
 
         #hessian computation: first gather the off-diagonal cells
+        N = len(Y)
         offDiag = [sourcePDF(pd[i])/(Y[i]-Y[i-1]) for i in np.arange(1,N)]
         
         #hessian computation: now gather all entries of the matrix into row major order
         rowSums = [-(offDiag[i]+offDiag[i+1]) for i in np.arange(len(offDiag)-1)]
         mainDiagonal = [-offDiag[0]]+rowSums+[-offDiag[-1]]
-        print("The length of the main diagonal is ")
-        print(len(mainDiagonal))
 
         Hess = diags(
             diagonals = [offDiag,mainDiagonal,offDiag],
@@ -384,15 +430,14 @@ def laguerre_areas(domain, Y, psi, der=False,dimension=2,distr = None, optional_
             shape=(N,N),
             format='csr'
         )
+        #time2=time.time()
+        #print("The time for integral and hessian compute")
+        #print(str(time2-time1))
 
-        if der:
-            print(Hess.diagonal())
-            return integs,Hess
-        else:
-            return integs
+        return np.array(integs),-Hess
 
-#domain: in 2 dimensions, this is the density (convexPolyhedra or scaledImage).
-    #In 1 dimension, this is an array with two entries (lower bound on domain ,upper bound on domain)
+#twoDimDensity: in 2 dimensions, this is the density (convexPolyhedra or scaledImage).
+    #In 1 dimension, this parameter should be set to None.
 #distr:
     #In 2 dimensions not needed. In one dimension, this is the name of the probability distribution.
     #supported: 'normal' and 'beta'
@@ -400,7 +445,7 @@ def laguerre_areas(domain, Y, psi, der=False,dimension=2,distr = None, optional_
     #In 2 dimensions not needed. In one dimension, these are the optional arguments to go with distr
     #When using distr=normal, optional arguments correspond to [mean,variance]
     #When using distr=beta, optional arguments correspond to [alpha1,beta1]
-#Y: the data
+#Y: the data. IF D=1, the DATA SHOULD BE IN SORTED INCREASING ORDER
 #nu: The masses
 #verbose: Make true to get iteration print outs
 #maxerr: When the gradient norm falls below maxerr, the second order ascent stops
@@ -411,17 +456,36 @@ def laguerre_areas(domain, Y, psi, der=False,dimension=2,distr = None, optional_
 #dimension: What is the dimension of the data
 #maxBacktracks: Backtracking will stop after this number of iterations. If this happens, its generally bad ( and a warning will be issued)
 #beta: The multiplier during backtracking
-def optimal_transport(domain, Y, nu, psi0=None, verbose=False, maxerr=1e-6, maxiter=1000,learningRate = 1.0,illConditionThresh = 10e5,method="secondOrder",dimension=2,maxBacktracks = 100,beta=3/4,distr=None,optional_arguments=None):
+def optimal_transport(twoDimDensity, Y, nu, psi0=None, verbose=False, maxerr=1e-6, maxiter=1000,learningRate = 1.0,illConditionThresh = 10e5,method="secondOrder",dimension=2,maxBacktracks = 1000,beta=3/4,distr=None,oneDimBounds=None,optional_arguments=None,performStartSearch=False,startSearchTrials=0,startSearchBuffer=1e-20):
     if psi0 is None:
         psi0 = np.zeros(len(nu))
+    psip = psi0[0:-1] - psi0[-1]
         
     def F(psip):
-        g,h = laguerre_areas(domain, Y, np.hstack((psip,0)), der=True,dimension=dimension,distr=distr,optional_arguments=optional_arguments)
+        g,h = laguerre_areas(twoDimDensity, Y, np.hstack((psip,0)), der=True,dimension=dimension,distr=distr,oneDimBounds=oneDimBounds,optional_arguments=optional_arguments)
         return g[0:-1], h[0:-1,0:-1]
     
-    psip = psi0[0:-1] - psi0[-1]
+    if performStartSearch and np.min(g) < startSearchBuffer:
+        j = 0
+        while j < startSearchTrials:
+            psi = np.random.normal(0,.001,np.shape(Y)[0])
+            psip = psi[0:-1]-psi[-1]
+            g,h = F(psip)
+            print(np.min(g))
+            if np.min(g) > startSearchBuffer:
+                print("hello")
+                psi0 = psi
+                break
+            j=j+1
+        if j == startSearchTrials:
+            print("WARNING: If you don't start in the convex set, no convergence guarantee")
+        
     nup = nu[0:-1]
     g,h = F(psip)
+    #print("The smallest initial integral is "+str(np.min(g)))
+    if np.isnan(g[0]):
+        print("pick a better starting location and try again. There were empty cells in the laguerre diagram")
+        return "FAILURE"
     for it in range(maxiter):
         err = np.linalg.norm(nup - g)
         if verbose:
@@ -439,35 +503,78 @@ def optimal_transport(domain, Y, nu, psi0=None, verbose=False, maxerr=1e-6, maxi
         j=0
         while True and j < maxBacktracks:
             psip = psip0 + t*d
-            try:
-                g,h = F(psip)
-                #compute the condition number of h
-                condVal = cond(h.toarray())
-                #print("The condition number is "+str(condVal))
-            except ValueError:
+            if np.isnan(g[0]):
                 t = beta*t
-            if np.min(g) > 0 and condVal < illConditionThresh:
-                break
             else:
-                t = beta*t
-                j=j+1
+            #try:
+                g,h = F(psip)
+                if (not(np.isnan(g[0]))):
+                    condVal = cond(h.toarray())
+                    if np.min(g) > 0 and condVal < illConditionThresh:
+                        break
+                    else:
+                        t = beta*t
+                else:
+                    t = beta*t
+            # try:
+            #     g,h = F(psip)
+            #     if np.isnan(g[0]):
+            #         t = beta*t
+            #     else:
+            #         try:
+            #         #     lamMax = eigsh(h,k=1,which='LA',return_eigenvectors=False)[0]
+            #         #     lamMin = eigsh(h,k=1,sigma=0,which='LM',return_eigenvectors=False)[0]
+            #         # #condVal2 = cond(h.toarray()) How we used to compute condition
+            #         #     condVal = abs(lamMax)/abs(lamMin)
+            #               condVal = cond(h.toarray())
+            #         except RuntimeError:
+            #             print("Warning: Hessian is exactly singular.")
+            #             #condVal = np.inf
+            #         #print("The condition number is "+str(condVal))
+            #         if np.min(g) > 0 and condVal < illConditionThresh:
+            #             break
+            # except ValueError:
+            #     t = beta*t
+            j=j+1
         if j == maxBacktracks:
-            print("Optimal transport backtracking is stuck on an ill conditioned location")
+            print("WARNING: Optimal transport backtracking is stuck on an ill conditioned location")
+            #return np.hstack((psip,0))
             return ["NA","NA"]
     return np.hstack((psip,0))
 
 #Self-explanatory.
-#distr, optional_arguments: Only for 1d case.
-def computeW2_squared(Y,masses,density,plotPowerDiagram = False,dimension=2,distr = None,optional_arguments=None):
-    g = optimal_transport(density,Y,masses,dimension=dimension,distr=distr,optional_arguments=optional_arguments)
+def computeW2_squared(Y,masses,twoDimDensity,plotPowerDiagram = False,dimension=2,distr = None,oneDimBounds=None, optional_arguments=None,illConditionThresh = 10e5,performStartSearch = False,startSearchTrials=0,startSearchBuffer=1e-20):
+    if dimension == 1:
+            #optimal_transport expects that Y will be in sorted order
+            sortedOrder = np.argsort(Y)
+            Y = Y[sortedOrder]
+            masses = masses[sortedOrder]
+    g = optimal_transport(twoDimDensity,Y,masses,dimension=dimension,distr=distr,oneDimBounds=oneDimBounds,optional_arguments=optional_arguments,illConditionThresh = illConditionThresh,performStartSearch=performStartSearch,startSearchTrials=startSearchTrials,startSearchBuffer=startSearchBuffer)
     if g[0] == "NA":
         print("WARNING: optimal tranport calculation became stuck on an ill conditioned location")
         return np.inf
     if dimension == 2:
-        pd = PowerDiagram(Y,-g,density)
+        pd = PowerDiagram(Y,-g,twoDimDensity)
         if plotPowerDiagram:
             toDisplay = pd.display_jupyter(disp_centroids = True,disp_positions = True,disp_ids = False,disp_arrows = True,title="Power Diagram at Solution")
             display(toDisplay)
         return (np.sum(pd.second_order_moments()))
+    if dimension == 1:
+        pd = oneDimPartitionFinder(g,Y,oneDimBounds)
+        N = len(Y)
+        #Now we perform the second moment computations.
+        i = 0
+        result = 0
+        for i in np.arange(N):
+            lowerLim = pd[i]
+            upperLim = pd[i+1]
+            datum = Y[i]
+            if lowerLim < upperLim:
+                integVal,err = quad(oneDimSecondMomentIntegration,lowerLim,upperLim,args = (datum,distr,optional_arguments))
+                result = result+integVal
+        if plotPowerDiagram:
+            oneDimDisplayPowerDiagram(pd,Y)
+        return result
+            
 
 
