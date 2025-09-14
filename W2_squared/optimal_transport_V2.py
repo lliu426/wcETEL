@@ -304,7 +304,7 @@ def make_image_SI(img, box=[0, 0, 1, 1],display = False):
 #frequency determines the number of bins per axis.
 #alpha1,beta1 : the alpha, beta params for the beta density on the x-axis
 #alpha2,beta2 : along the y-axis
-def make_product_beta_density(alpha1,beta1,alpha2,beta2,frequency,display=False):
+def make_product_beta_density(alpha1,beta1,alpha2,beta2,frequency,display=False,priorConc=0):
     t = np.linspace(0,1,frequency)
     x,y = np.meshgrid(t,t)
     img = np.zeros(shape = (frequency-1,frequency-1))
@@ -315,6 +315,9 @@ def make_product_beta_density(alpha1,beta1,alpha2,beta2,frequency,display=False)
                 yLow = y[i,j]
                 yHigh = y[i+1,j+1]
                 img[i,j] = (beta.cdf(xHigh,alpha1,beta1)-beta.cdf(xLow,alpha1,beta1))*(beta.cdf(yHigh,alpha2,beta2)-beta.cdf(yLow,alpha2,beta2))
+    img = ((frequency-1)**2)*img
+    img = img+priorConc
+    img = img/np.sum(img)
     img = ((frequency-1)**2)*img
     return make_image_SI(img,display=display)
 
