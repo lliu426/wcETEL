@@ -1,0 +1,621 @@
+=== START λ=25 ===
+
+
+The 1th repeated runner starts.
+    The mass update iteration 0 starts.
+            Finished line search at j = 30
+            Finished line search at j = 32
+            Finished line search at j = 29
+            Finished line search at j = 26
+            Finished line search at j = 25
+            Finished line search at j = 23
+            Finished line search at j = 23
+            Finished line search at j = 20
+            Finished line search at j = 17
+            Finished line search at j = 18
+            Finished line search at j = 15
+            Finished line search at j = 12
+            Finished line search at j = 10
+            Finished line search at j = 4
+            Finished line search at j = 3
+            Finished line search at j = 5
+            Finished line search at j = 0
+            Finished line search at j = 0
+            Finished line search at j = 0
+            Finished line search at j = 0
+            Finished line search at j = 0
+            Finished line search at j = 0
+            Finished line search at j = 0
+            Finished line search at j = 0
+            Finished line search at j = 0
+            Finished line search at j = 0
+            Finished line search at j = 0
+            Finished line search at j = 0
+            Finished line search at j = 0
+            Finished line search at j = 0
+            Finished line search at j = 0
+        finished OT at it = 31
+    The mass update iteration 1 starts.
+            Finished line search at j = 0
+            Finished line search at j = 0
+            Finished line search at j = 0
+            Finished line search at j = 0
+            Finished line search at j = 0
+            Finished line search at j = 0
+            Finished line search at j = 0
+            Finished line search at j = 0
+        finished OT at it = 8
+    Mass update finished at iteration 1.
+
+
+The 2th repeated runner starts.
+    The mass update iteration 0 starts.
+            Finished line search at j = 33
+            Finished line search at j = 27
+            Finished line search at j = 27
+            Finished line search at j = 29
+            Finished line search at j = 26
+            Finished line search at j = 23
+            Finished line search at j = 22
+            Finished line search at j = 23
+            Finished line search at j = 18
+            Finished line search at j = 19
+            Finished line search at j = 15
+            Finished line search at j = 16
+            Finished line search at j = 12
+            Finished line search at j = 15
+            Finished line search at j = 8
+            Finished line search at j = 14
+            Finished line search at j = 4
+            Finished line search at j = 4
+            Finished line search at j = 0
+            Finished line search at j = 0
+            Finished line search at j = 0
+            Finished line search at j = 0
+            Finished line search at j = 0
+            Finished line search at j = 0
+            Finished line search at j = 0
+            Finished line search at j = 0
+            Finished line search at j = 0
+            Finished line search at j = 0
+            Finished line search at j = 0
+            Finished line search at j = 0
+            Finished line search at j = 0
+            Finished line search at j = 0
+            Finished line search at j = 0
+        finished OT at it = 33
+    The mass update iteration 1 starts.
+            Finished line search at j = 0
+            Finished line search at j = 0
+            Finished line search at j = 0
+            Finished line search at j = 0
+            Finished line search at j = 0
+            Finished line search at j = 0
+            Finished line search at j = 0
+            Finished line search at j = 0
+            Finished line search at j = 0
+            Finished line search at j = 0
+        finished OT at it = 10
+    The mass update iteration 2 starts.
+            Finished line search at j = 1
+            Finished line search at j = 0
+            Finished line search at j = 0
+            Finished line search at j = 0
+            Finished line search at j = 0
+            Finished line search at j = 0
+            Finished line search at j = 0
+            Finished line search at j = 0
+            Finished line search at j = 0
+        finished OT at it = 9
+    The mass update iteration 3 starts.
+            Finished line search at j = 0
+            Finished line search at j = 0
+            Finished line search at j = 0
+            Finished line search at j = 0
+            Finished line search at j = 0
+            Finished line search at j = 0
+            Finished line search at j = 0
+        finished OT at it = 7
+    Mass update finished at iteration 3.
+
+
+The 3th repeated runner starts.
+    The mass update iteration 0 starts.
+            Finished line search at j = 31
+            Finished line search at j = 27
+            Finished line search at j = 27
+            Finished line search at j = 27
+            Finished line search at j = 25
+            Finished line search at j = 26
+            Finished line search at j = 24
+            Finished line search at j = 22
+            Finished line search at j = 18
+            Finished line search at j = 16
+            Finished line search at j = 13
+            Finished line search at j = 10
+            Finished line search at j = 10
+            Finished line search at j = 7
+            Finished line search at j = 2
+            Finished line search at j = 0
+            Finished line search at j = 0
+            Finished line search at j = 0
+            Finished line search at j = 0
+            Finished line search at j = 0
+            Finished line search at j = 0
+            Finished line search at j = 0
+            Finished line search at j = 0
+            Finished line search at j = 0
+            Finished line search at j = 0
+            Finished line search at j = 0
+            Finished line search at j = 0
+            Finished line search at j = 0
+            Finished line search at j = 0
+            Finished line search at j = 0
+        finished OT at it = 30
+    The mass update iteration 1 starts.
+            Finished line search at j = 0
+            Finished line search at j = 0
+            Finished line search at j = 0
+            Finished line search at j = 0
+            Finished line search at j = 0
+            Finished line search at j = 0
+            Finished line search at j = 0
+            Finished line search at j = 0
+            Finished line search at j = 0
+        finished OT at it = 9
+    Mass update finished at iteration 1.
+
+
+The 4th repeated runner starts.
+    The mass update iteration 0 starts.
+            Finished line search at j = 32
+            Finished line search at j = 34
+            Finished line search at j = 33
+            Finished line search at j = 28
+            Finished line search at j = 28
+            Finished line search at j = 28
+            Finished line search at j = 26
+            Finished line search at j = 25
+            Finished line search at j = 23
+            Finished line search at j = 19
+            Finished line search at j = 21
+            Finished line search at j = 20
+            Finished line search at j = 16
+            Finished line search at j = 14
+            Finished line search at j = 9
+            Finished line search at j = 11
+            Finished line search at j = 5
+            Finished line search at j = 8
+            Finished line search at j = 1
+            Finished line search at j = 0
+            Finished line search at j = 0
+            Finished line search at j = 0
+            Finished line search at j = 0
+            Finished line search at j = 0
+            Finished line search at j = 0
+            Finished line search at j = 0
+            Finished line search at j = 0
+            Finished line search at j = 0
+            Finished line search at j = 0
+            Finished line search at j = 0
+            Finished line search at j = 0
+            Finished line search at j = 0
+            Finished line search at j = 0
+            Finished line search at j = 0
+        finished OT at it = 34
+    The mass update iteration 1 starts.
+            Finished line search at j = 0
+            Finished line search at j = 0
+            Finished line search at j = 0
+            Finished line search at j = 0
+            Finished line search at j = 0
+            Finished line search at j = 0
+            Finished line search at j = 0
+            Finished line search at j = 0
+        finished OT at it = 8
+    Mass update finished at iteration 1.
+
+
+The 5th repeated runner starts.
+    The mass update iteration 0 starts.
+            Finished line search at j = 31
+            Finished line search at j = 29
+            Finished line search at j = 27
+            Finished line search at j = 27
+            Finished line search at j = 25
+            Finished line search at j = 26
+            Finished line search at j = 24
+            Finished line search at j = 23
+            Finished line search at j = 22
+            Finished line search at j = 19
+            Finished line search at j = 26
+            Finished line search at j = 21
+            Finished line search at j = 16
+            Finished line search at j = 15
+            Finished line search at j = 15
+            Finished line search at j = 11
+            Finished line search at j = 10
+            Finished line search at j = 6
+            Finished line search at j = 2
+            Finished line search at j = 0
+            Finished line search at j = 0
+            Finished line search at j = 0
+            Finished line search at j = 0
+            Finished line search at j = 0
+            Finished line search at j = 0
+            Finished line search at j = 0
+            Finished line search at j = 0
+            Finished line search at j = 0
+            Finished line search at j = 0
+            Finished line search at j = 0
+            Finished line search at j = 0
+            Finished line search at j = 0
+            Finished line search at j = 0
+            Finished line search at j = 0
+        finished OT at it = 34
+    The mass update iteration 1 starts.
+            Finished line search at j = 0
+            Finished line search at j = 0
+            Finished line search at j = 0
+            Finished line search at j = 0
+            Finished line search at j = 0
+            Finished line search at j = 0
+            Finished line search at j = 0
+            Finished line search at j = 0
+        finished OT at it = 8
+    The mass update iteration 2 starts.
+            Finished line search at j = 10
+            Finished line search at j = 2
+            Finished line search at j = 0
+            Finished line search at j = 0
+            Finished line search at j = 0
+            Finished line search at j = 0
+            Finished line search at j = 0
+            Finished line search at j = 0
+            Finished line search at j = 0
+            Finished line search at j = 0
+            Finished line search at j = 0
+            Finished line search at j = 0
+            Finished line search at j = 0
+            Finished line search at j = 0
+        finished OT at it = 14
+    The mass update iteration 3 starts.
+            Finished line search at j = 0
+            Finished line search at j = 0
+            Finished line search at j = 0
+            Finished line search at j = 0
+            Finished line search at j = 0
+            Finished line search at j = 0
+            Finished line search at j = 0
+            Finished line search at j = 0
+            Finished line search at j = 0
+            Finished line search at j = 0
+            Finished line search at j = 0
+        finished OT at it = 11
+    The mass update iteration 4 starts.
+            Finished line search at j = 0
+            Finished line search at j = 0
+            Finished line search at j = 0
+            Finished line search at j = 0
+            Finished line search at j = 0
+            Finished line search at j = 0
+            Finished line search at j = 0
+            Finished line search at j = 0
+        finished OT at it = 8
+    Mass update finished at iteration 4.
+
+
+The 6th repeated runner starts.
+    The mass update iteration 0 starts.
+            Finished line search at j = 33
+            Finished line search at j = 28
+            Finished line search at j = 28
+            Finished line search at j = 28
+            Finished line search at j = 26
+            Finished line search at j = 25
+            Finished line search at j = 32
+            Finished line search at j = 24
+            Finished line search at j = 21
+            Finished line search at j = 20
+            Finished line search at j = 16
+            Finished line search at j = 17
+            Finished line search at j = 15
+            Finished line search at j = 13
+            Finished line search at j = 8
+            Finished line search at j = 3
+            Finished line search at j = 0
+            Finished line search at j = 0
+            Finished line search at j = 0
+            Finished line search at j = 0
+            Finished line search at j = 0
+            Finished line search at j = 0
+            Finished line search at j = 0
+            Finished line search at j = 0
+            Finished line search at j = 0
+            Finished line search at j = 0
+            Finished line search at j = 0
+            Finished line search at j = 0
+            Finished line search at j = 0
+            Finished line search at j = 0
+            Finished line search at j = 0
+        finished OT at it = 31
+    The mass update iteration 1 starts.
+            Finished line search at j = 0
+            Finished line search at j = 0
+            Finished line search at j = 0
+            Finished line search at j = 0
+            Finished line search at j = 0
+            Finished line search at j = 0
+            Finished line search at j = 0
+            Finished line search at j = 0
+        finished OT at it = 8
+    Mass update finished at iteration 1.
+
+
+The 7th repeated runner starts.
+    The mass update iteration 0 starts.
+            Finished line search at j = 30
+            Finished line search at j = 28
+            Finished line search at j = 36
+            Finished line search at j = 27
+            Finished line search at j = 27
+            Finished line search at j = 25
+            Finished line search at j = 23
+            Finished line search at j = 21
+            Finished line search at j = 22
+            Finished line search at j = 19
+            Finished line search at j = 17
+            Finished line search at j = 13
+            Finished line search at j = 12
+            Finished line search at j = 8
+            Finished line search at j = 5
+            Finished line search at j = 5
+            Finished line search at j = 6
+            Finished line search at j = 0
+            Finished line search at j = 0
+            Finished line search at j = 0
+            Finished line search at j = 0
+            Finished line search at j = 0
+            Finished line search at j = 0
+            Finished line search at j = 0
+            Finished line search at j = 0
+            Finished line search at j = 0
+            Finished line search at j = 0
+            Finished line search at j = 0
+            Finished line search at j = 0
+            Finished line search at j = 0
+            Finished line search at j = 0
+            Finished line search at j = 0
+        finished OT at it = 32
+    The mass update iteration 1 starts.
+            Finished line search at j = 0
+            Finished line search at j = 0
+            Finished line search at j = 0
+            Finished line search at j = 0
+            Finished line search at j = 0
+            Finished line search at j = 0
+            Finished line search at j = 0
+        finished OT at it = 7
+    Mass update finished at iteration 1.
+
+
+The 8th repeated runner starts.
+    The mass update iteration 0 starts.
+            Finished line search at j = 34
+            Finished line search at j = 28
+            Finished line search at j = 26
+            Finished line search at j = 27
+            Finished line search at j = 24
+            Finished line search at j = 22
+            Finished line search at j = 21
+            Finished line search at j = 18
+            Finished line search at j = 16
+            Finished line search at j = 14
+            Finished line search at j = 13
+            Finished line search at j = 9
+            Finished line search at j = 5
+            Finished line search at j = 1
+            Finished line search at j = 0
+            Finished line search at j = 0
+            Finished line search at j = 0
+            Finished line search at j = 0
+            Finished line search at j = 0
+            Finished line search at j = 0
+            Finished line search at j = 0
+            Finished line search at j = 0
+            Finished line search at j = 0
+            Finished line search at j = 0
+            Finished line search at j = 0
+            Finished line search at j = 0
+            Finished line search at j = 0
+            Finished line search at j = 0
+            Finished line search at j = 0
+        finished OT at it = 29
+    The mass update iteration 1 starts.
+            Finished line search at j = 0
+            Finished line search at j = 0
+            Finished line search at j = 0
+            Finished line search at j = 0
+            Finished line search at j = 0
+            Finished line search at j = 0
+            Finished line search at j = 0
+        finished OT at it = 7
+    The mass update iteration 2 starts.
+            Finished line search at j = 7
+            Finished line search at j = 3
+            Finished line search at j = 0
+            Finished line search at j = 0
+            Finished line search at j = 0
+            Finished line search at j = 0
+            Finished line search at j = 0
+            Finished line search at j = 0
+            Finished line search at j = 0
+            Finished line search at j = 0
+            Finished line search at j = 0
+            Finished line search at j = 0
+            Finished line search at j = 0
+        finished OT at it = 13
+    The mass update iteration 3 starts.
+            Finished line search at j = 0
+            Finished line search at j = 0
+            Finished line search at j = 0
+            Finished line search at j = 0
+            Finished line search at j = 0
+            Finished line search at j = 0
+            Finished line search at j = 0
+            Finished line search at j = 0
+            Finished line search at j = 0
+            Finished line search at j = 0
+        finished OT at it = 10
+    The mass update iteration 4 starts.
+            Finished line search at j = 0
+            Finished line search at j = 0
+            Finished line search at j = 0
+            Finished line search at j = 0
+            Finished line search at j = 0
+            Finished line search at j = 0
+            Finished line search at j = 0
+            Finished line search at j = 0
+        finished OT at it = 8
+    The mass update iteration 5 starts.
+            Finished line search at j = 3
+            Finished line search at j = 0
+            Finished line search at j = 0
+            Finished line search at j = 0
+            Finished line search at j = 0
+            Finished line search at j = 0
+            Finished line search at j = 0
+            Finished line search at j = 0
+            Finished line search at j = 0
+            Finished line search at j = 0
+            Finished line search at j = 0
+            Finished line search at j = 0
+            Finished line search at j = 0
+        finished OT at it = 13
+    The mass update iteration 6 starts.
+            Finished line search at j = 0
+            Finished line search at j = 0
+            Finished line search at j = 0
+            Finished line search at j = 0
+            Finished line search at j = 0
+            Finished line search at j = 0
+            Finished line search at j = 0
+            Finished line search at j = 0
+        finished OT at it = 8
+    The mass update iteration 7 starts.
+            Finished line search at j = 0
+            Finished line search at j = 0
+            Finished line search at j = 0
+            Finished line search at j = 0
+            Finished line search at j = 0
+            Finished line search at j = 0
+            Finished line search at j = 0
+            Finished line search at j = 0
+            Finished line search at j = 0
+        finished OT at it = 9
+    Mass update finished at iteration 7.
+
+
+The 9th repeated runner starts.
+    The mass update iteration 0 starts.
+            Finished line search at j = 31
+            Finished line search at j = 26
+            Finished line search at j = 26
+            Finished line search at j = 25
+            Finished line search at j = 23
+            Finished line search at j = 22
+            Finished line search at j = 18
+            Finished line search at j = 16
+            Finished line search at j = 14
+            Finished line search at j = 14
+            Finished line search at j = 10
+            Finished line search at j = 8
+            Finished line search at j = 5
+            Finished line search at j = 3
+            Finished line search at j = 0
+            Finished line search at j = 0
+            Finished line search at j = 0
+            Finished line search at j = 0
+            Finished line search at j = 0
+            Finished line search at j = 0
+            Finished line search at j = 0
+            Finished line search at j = 0
+            Finished line search at j = 0
+            Finished line search at j = 0
+            Finished line search at j = 0
+            Finished line search at j = 0
+            Finished line search at j = 0
+            Finished line search at j = 0
+            Finished line search at j = 0
+        finished OT at it = 29
+    The mass update iteration 1 starts.
+            Finished line search at j = 0
+            Finished line search at j = 0
+            Finished line search at j = 0
+            Finished line search at j = 0
+            Finished line search at j = 0
+            Finished line search at j = 0
+            Finished line search at j = 0
+            Finished line search at j = 0
+        finished OT at it = 8
+    The mass update iteration 2 starts.
+            Finished line search at j = 0
+            Finished line search at j = 0
+            Finished line search at j = 0
+            Finished line search at j = 0
+            Finished line search at j = 0
+            Finished line search at j = 0
+            Finished line search at j = 0
+        finished OT at it = 7
+    Mass update finished at iteration 2.
+
+
+The 10th repeated runner starts.
+    The mass update iteration 0 starts.
+            Finished line search at j = 29
+            Finished line search at j = 27
+            Finished line search at j = 29
+            Finished line search at j = 28
+            Finished line search at j = 26
+            Finished line search at j = 26
+            Finished line search at j = 23
+            Finished line search at j = 22
+            Finished line search at j = 19
+            Finished line search at j = 21
+            Finished line search at j = 17
+            Finished line search at j = 17
+            Finished line search at j = 12
+            Finished line search at j = 9
+            Finished line search at j = 7
+            Finished line search at j = 18
+            Finished line search at j = 5
+            Finished line search at j = 1
+            Finished line search at j = 0
+            Finished line search at j = 0
+            Finished line search at j = 0
+            Finished line search at j = 0
+            Finished line search at j = 0
+            Finished line search at j = 0
+            Finished line search at j = 0
+            Finished line search at j = 0
+            Finished line search at j = 0
+            Finished line search at j = 0
+            Finished line search at j = 0
+            Finished line search at j = 0
+            Finished line search at j = 0
+            Finished line search at j = 0
+            Finished line search at j = 0
+        finished OT at it = 33
+    The mass update iteration 1 starts.
+            Finished line search at j = 0
+            Finished line search at j = 0
+            Finished line search at j = 0
+            Finished line search at j = 0
+            Finished line search at j = 0
+            Finished line search at j = 0
+            Finished line search at j = 0
+            Finished line search at j = 0
+            Finished line search at j = 0
+        finished OT at it = 9
+    Mass update finished at iteration 1.
+=== END   λ=25 ===
