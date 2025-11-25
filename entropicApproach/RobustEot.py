@@ -14,10 +14,13 @@ def AR1(phi,d,size):
             X[:, j] = phi * X[:, j-1] + eps[:, j]
     return X
 
-#likelihoodCalculator: Solves argmin_{w} sum w_i log(w_i)+lambda * W_2^2( P(X,w), F_{theta})
+#likelihoodCalculator: Stochastic Gradient algorithm to approx solve argmin_{w} sum w_i log(w_i)+lambda * W_2^2( P(X,w), F_{theta})
 #where P(X,w) is the discrete distribution with sample locations X = (X_1,...,X_n) and where F_{theta} is some param model.
+#F_{theta}, the source probability distribution, is assumed to be accessible via simulation.
+#This function returns the vector of weights. Arguments are given below.
+
 #X: This is an n x d matrix of samples
-#distr: A string indicating the source probability distribution
+#distr: A string indicating the source probability distribution. For given distr, you need to fill in the sampler.
 #g0: The initial starting location for the gradient ascent
 #eps: parameter of entropic OT 
 #C: the initial learning rate.
