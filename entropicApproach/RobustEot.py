@@ -4,6 +4,10 @@ from scipy.stats import norm
 from scipy.stats import beta
 from scipy.stats import multivariate_normal
 
+#For each parametric model that you consider, you will have to supply a function that collects simulations. For standard distributions like the normal
+#scipy.stats.norm is sufficient. For more complex parametric models, you might need to write your own sampler. An toy example is given
+#below: writing a simulator for a parametric model that is a snapshot of an AR1 of length d.
+
 def AR1(phi,d,size):
     eps = np.random.randn(size,d)
     X = np.zeros((size, d))
