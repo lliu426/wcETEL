@@ -14,7 +14,8 @@ def AR1(phi,d,size):
             X[:, j] = phi * X[:, j-1] + eps[:, j]
     return X
 
-
+#likelihoodCalculator: Solves argmin_{w} sum w_i log(w_i)+lambda * W_2^2( P(X,w), F_{theta})
+#where P(X,w) is the discrete distribution with sample locations X = (X_1,...,X_n) and where F_{theta} is some param model.
 #X: This is an n x d matrix of samples
 #distr: A string indicating the source probability distribution
 #g0: The initial starting location for the gradient ascent
@@ -22,9 +23,9 @@ def AR1(phi,d,size):
 #C: the initial learning rate.
 #optional_arguments: The parameters of the source probability distribution
 #max_iter: The number of iterations before returning.
-#a: The learning rate dampening exponent of Genans
-#b: The epsilon dampening exponent of Genans
-def entropic_optimal_transport(X,distr,eps,C,optional_arguments,num_iter = 1000,g0 = None, lam = 0,a = None,b = None):
+#a: The learning rate dampening exponent of Genans (To new user: Ignore and leave as None)
+#b: The epsilon dampening exponent of Genans (To new user: Ignore and leave as None)
+def likelihoodCalculator(X,distr,eps,C,optional_arguments,num_iter = 1000,g0 = None, lam = 0,a = None,b = None):
     N = np.shape(X)[0]
     if g0 is None:
         g0 = np.zeros(N-1)
